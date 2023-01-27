@@ -25,7 +25,7 @@ if __name__ == "__main__":
     BATCH_SIZE = 4
     NUM_EPOCHS = 50
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-    OUTPUT_DIR = "outputs"
+    OUTPUT_DIR = "outputs-focal"
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     fns = [f for f in Path(OEM_DATA_DIR).rglob("*.tif") if "/images/" in str(f)]
@@ -77,7 +77,7 @@ if __name__ == "__main__":
 
     network = open_earth_map.networks.UNet(in_channels=3, n_classes=N_CLASSES)
     optimizer = torch.optim.Adam(network.parameters(), lr=LR)
-    criterion = open_earth_map.losses.JaccardLoss()
+    criterion = open_earth_map.losses.FocalLoss()
 
     max_score = 0
     for epoch in range(NUM_EPOCHS):
@@ -105,7 +105,7 @@ if __name__ == "__main__":
                 model=network,
                 epoch=epoch,
                 best_score=max_score,
-                model_name="model2.pth",
+                model_name=f"model-{epoch}.pth",
                 output_dir=OUTPUT_DIR,
             )
 
