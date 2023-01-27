@@ -6,11 +6,14 @@ import torch
 import open_earth_map
 import torchvision
 from pathlib import Path
+import wandb
 
 warnings.filterwarnings("ignore")
 
 if __name__ == "__main__":
     start = time.time()
+    wandb.login()
+    wandb.init(project="remote-sensing")
 
     OEM_DATA_DIR = "/root/remote/OpenEarthMap_Mini"
     TRAIN_LIST = os.path.join(OEM_DATA_DIR, "train.txt")

@@ -2,7 +2,7 @@ import numpy as np
 import torch
 from tqdm import tqdm
 from . import metrics
-
+import wandb
 
 class AverageMeter:
     """Computes and stores the average and current value"""
@@ -80,14 +80,15 @@ def train_epoch(model, optimizer, criterion, dataloader, device="cpu"):
         loss = criterion(outputs, y)
         loss.backward()
         optimizer.step()
-        print(f"Step: {i}")
-        print(f"loss: {loss_meter.avg}")
+        # print(f"Step: {i}")
+        # print(f"loss: {loss_meter.avg}")
 
         loss_meter.update(loss.item(), n=n)
 
         with torch.no_grad():
             score_meter.update(metric(outputs, y), n=n)
 
+        wandb.log({'step': i, 'loss': loss_meter.avg, 'score': score_meter.avg})
         logs.update({"Loss": loss_meter.avg})
         logs.update({"Score": score_meter.avg})
         iterator.set_postfix_str(format_logs(logs))
@@ -114,6 +115,7 @@ def valid_epoch(model=None, criterion=None, dataloader=None, device="cpu"):
     model.to(device).eval()
 
     iterator = tqdm(dataloader, desc="Valid")
+    i=0
     for x, y, *_ in iterator:
         x = x.to(device).float()
         y = y.to(device).float()
@@ -125,8 +127,10 @@ def valid_epoch(model=None, criterion=None, dataloader=None, device="cpu"):
 
             loss_meter.update(loss.item(), n=n)
             score_meter.update(metric(outputs, y), n=n)
+        wandb.log({'valid_step': i, 'valid_loss': loss_meter.avg, 'valid_score': score_meter.avg})
 
         logs.update({"Loss": loss_meter.avg})
         logs.update({"Score": score_meter.avg})
         iterator.set_postfix_str(format_logs(logs))
+        i+=1
     return logs
