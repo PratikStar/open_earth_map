@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore")
 if __name__ == "__main__":
     start = time.time()
     wandb.login()
-    wandb.init(project="remote-sensing", entity="pratikstar")
+    wandb.init(project="remote-sensing", entity="pratikstar", name="JaccardLoss")
 
     OEM_DATA_DIR = "/root/remote/OpenEarthMap_Mini"
     TRAIN_LIST = os.path.join(OEM_DATA_DIR, "train.txt")
