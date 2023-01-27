@@ -69,6 +69,7 @@ def train_epoch(model, optimizer, criterion, dataloader, device="cpu"):
     model.to(device).train()
 
     iterator = tqdm(dataloader, desc="Train")
+    i=0
     for x, y, *_ in iterator:
         x = x.to(device).float()
         y = y.to(device).float()
@@ -79,6 +80,8 @@ def train_epoch(model, optimizer, criterion, dataloader, device="cpu"):
         loss = criterion(outputs, y)
         loss.backward()
         optimizer.step()
+        print(f"Step: {i}")
+        print(f"loss: {loss_meter.avg}")
 
         loss_meter.update(loss.item(), n=n)
 
@@ -88,6 +91,7 @@ def train_epoch(model, optimizer, criterion, dataloader, device="cpu"):
         logs.update({"Loss": loss_meter.avg})
         logs.update({"Score": score_meter.avg})
         iterator.set_postfix_str(format_logs(logs))
+        i+=1
     return logs
 
 

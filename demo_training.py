@@ -12,7 +12,7 @@ warnings.filterwarnings("ignore")
 if __name__ == "__main__":
     start = time.time()
 
-    OEM_DATA_DIR = "OpenEarthMap_Mini"
+    OEM_DATA_DIR = "/root/remote/OpenEarthMap_Mini"
     TRAIN_LIST = os.path.join(OEM_DATA_DIR, "train.txt")
     VAL_LIST = os.path.join(OEM_DATA_DIR, "val.txt")
 
